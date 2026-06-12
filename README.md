@@ -1,5 +1,7 @@
 # ATHENA
 
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white) ![Google Gemini](https://img.shields.io/badge/Google_Gemini-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white) ![Google Cloud](https://img.shields.io/badge/Google_Cloud-4285F4?style=for-the-badge&logo=googlecloud&logoColor=white) ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
+
 AI 포트폴리오 매니저 방식의 암호화폐 현물 자동운용 시스템. (현행 운영)
 
 앞선 6세대 시스템(VALKYR → ARGOS → OMNI → METIS → HERMES → KAIROS)에서 검증된 패턴만 모아 재설계했다. 핵심 차이는 AI의 역할이다 — 매매 시그널 생성기가 아니라, **비중을 결정하는 포트폴리오 매니저**로 제한하고 실행과 안전장치는 전부 코드가 담당한다.
