@@ -2,7 +2,7 @@
 
 사용:
   pip install pybit python-dotenv
-  cd /Users/sue/Projects/ATHENA
+  cd ~/ATHENA
   python3 check_balance.py
 
 ATHENA용 USDT (Spot)가 얼마 있는지 확인.
