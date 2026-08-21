@@ -10,9 +10,9 @@ AI 포트폴리오 매니저 방식의 암호화폐 현물 자동운용 시스�
 
 | 역할 | 담당 |
 |---|---|
-| 시장 분석·비중 결정 | AI (Multi-Agent: Analyst / Risk Manager / Portfolio Manager) |
+| 시장 분석·비중 결정 | AI (Gemini **단일 에이전트** — Guardian 모드, agentic tool loop) |
 | 주문 실행 | 코드 (Bybit Spot API) |
-| 안전장치 | 코드 (리밸런싱 threshold 15%, 드로다운 -15% 셧다운) |
+| 안전장치 | 코드 (리밸런싱 threshold **0.5%**, 드로다운 −15% 셧다운) |
 
 이전 세대에서 가져온 것:
 
@@ -25,11 +25,12 @@ AI 포트폴리오 매니저 방식의 암호화폐 현물 자동운용 시스�
 
 ## 동작 방식
 
-4시간 주기로 동작한다.
+**6시간** 주기로 동작한다(`settings.py:173`. Pro 호출 비용 때문에 4H 에서 늘렸다). 별도로 15분마다 긴급 점검을 돈다.
 
 1. **데이터 수집** — 무료 공개 API 8종에서 통합 컨텍스트 생성
-2. **Multi-Agent 분석** — Analyst가 시장 분석 → Risk Manager가 리스크 평가 → Portfolio Manager가 목표 비중 결정
-3. **리밸런싱** — 목표 비중과 현재 비중의 괴리가 threshold(15%)를 넘을 때만 주문 실행
+2. **단일 에이전트 분석** — `run_decision()` 이 Gemini agentic loop 를 한 번 돌려 5단계 결정 JSON 을 받고 검증한다.
+   산출: `regime`(EXTREME_BOTTOM ~ EXTREME_TOP) · `cycle_position_score`(0-100) · `dca_decision`(multiplier) · `portfolio_decision`(target_weights)
+3. **리밸런싱** — 목표 비중과 현재 비중의 괴리가 threshold(**0.5%**, `settings.py:135`)를 넘을 때만 주문 실행
 4. **기록** — 모든 결정과 근거를 DB에 저장, 회고에 활용
 
 ### 데이터 입력 (전부 무료 API)
@@ -41,7 +42,6 @@ AI 포트폴리오 매니저 방식의 암호화폐 현물 자동운용 시스�
 | 거시 지표 (DXY/SPX) | yfinance |
 | ETF 자금 흐름 | Farside Investors |
 | 뉴스/소셜 | cryptocurrency.cv, Reddit JSON |
-| 김치 프리미엄 | kimpga |
 | 온체인 | DefiLlama |
 
 ## 운영 원칙
@@ -73,7 +73,7 @@ GCP e2-small에서 systemd 서비스(`athena.service`)로 운영하며 텔레그
 ```
 athena/
 ├── main.py              # 메인 루프 (4H 주기)
-├── ai/                  # Multi-Agent 프롬프트, Gemini 클라이언트
+├── ai/                  # Guardian 프롬프트(단일), Gemini 클라이언트
 ├── core/                # 데이터 수집, 리밸런싱, 안전장치
 ├── data_sources/        # 무료 API 어댑터 8종
 ├── exchange/            # Bybit Spot 클라이언트
